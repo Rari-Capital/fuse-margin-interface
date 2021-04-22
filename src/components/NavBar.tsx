@@ -5,6 +5,8 @@ import {
   IconButton,
   useDisclosure,
   Stack,
+  Link,
+  Image,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { ethers } from "ethers";
@@ -44,7 +46,12 @@ export default function NavBar({
             onClick={isOpen ? onClose : onOpen}
           />
           <HStack spacing={8} alignItems={"center"}>
-            <Box>Fuse Margin Trading</Box>
+            <Link>
+              <HStack spacing={4} alignItems={"center"}>
+                <Image borderRadius="full" src="fuseicon.png" alt="Fuse Logo" />
+                <Box>Fuse Margin Trading</Box>
+              </HStack>
+            </Link>
             <HStack
               as={"nav"}
               spacing={4}

@@ -12,6 +12,7 @@ function WalletButton({
 }): JSX.Element {
   return (
     <Button
+      color="black"
       onClick={() => {
         if (!provider) {
           loadWeb3Modal();
