@@ -53,7 +53,7 @@ export default function NavBar({
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
           <IconButton
             size={"md"}
-            icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+            icon={isOpen ? <CloseIcon /> : <HamburgerIcon color="black" />}
             aria-label={"Open Menu"}
             display={{ md: !isOpen ? "none" : "inherit" }}
             onClick={isOpen ? onClose : onOpen}
