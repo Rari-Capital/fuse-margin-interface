@@ -73,7 +73,12 @@ export default function NavBar({
               display={{ base: "none", md: "flex" }}
             >
               {Links.map((link) => (
-                <NavLink key={link.link} link={link.link} url={link.url} external={link.external} />
+                <NavLink
+                  key={link.link}
+                  link={link.link}
+                  url={link.url}
+                  external={link.external}
+                />
               ))}
             </HStack>
           </HStack>
@@ -89,7 +94,12 @@ export default function NavBar({
           <Box pb={4}>
             <Stack as={"nav"} spacing={4}>
               {Links.map((link) => (
-                <NavLink key={link.link} link={link.link} url={link.url} external={link.external} />
+                <NavLink
+                  key={link.link}
+                  link={link.link}
+                  url={link.url}
+                  external={link.external}
+                />
               ))}
             </Stack>
           </Box>

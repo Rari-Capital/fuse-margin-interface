@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
-import { Box, Spinner, Center, Heading, Link, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Spinner,
+  Center,
+  Heading,
+  Link,
+  Text,
+  UnorderedList,
+  ListItem,
+} from "@chakra-ui/react";
 import getFuseData, { FuseData } from "../../utils/getFuseData";
 import Selection from "./Selection";
 
@@ -34,11 +43,19 @@ function Home({
         </Heading>
       </Center>
       {!loading ? (
-        <Selection
-          fuseData={fuseData}
-          currentPool={currentPool}
-          setCurrentPool={setCurrentPool}
-        />
+        <>
+          <Selection
+            fuseData={fuseData}
+            currentPool={currentPool}
+            setCurrentPool={setCurrentPool}
+          />
+          <Box marginTop={2}>Pool assets:</Box>
+          <UnorderedList>
+            {fuseData[currentPool].tokens.map((token) => (
+              <ListItem>{token}</ListItem>
+            ))}
+          </UnorderedList>
+        </>
       ) : (
         <>
           <Center marginTop={10}>
