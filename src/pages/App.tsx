@@ -24,7 +24,7 @@ function App(): JSX.Element {
             />
             <Switch>
               <Route path="/">
-                <Home />
+                <Home provider={provider} />
               </Route>
             </Switch>
           </Box>
