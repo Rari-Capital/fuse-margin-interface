@@ -1,32 +1,40 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ethers } from "ethers";
-import {
-  FusePoolDirectory__factory,
-  FusePoolDirectory,
-} from "../../contracts/types";
-import { Box } from "@chakra-ui/react";
-import { fusePoolDirectoryAddress } from "../../constants";
+import { Box, Spinner, Center } from "@chakra-ui/react";
+import getFuseData, { FuseData } from "../../utils/getFuseData";
+import Selection from "./Selection";
 
 function Home({
   provider,
 }: {
   provider: ethers.providers.Web3Provider | undefined;
 }): JSX.Element {
+  const [loading, setLoading] = useState(true);
+  const [fuseData, setFuseData] = useState<FuseData[]>([]);
+  const [currentPool, setCurrentPool] = useState<number>(3);
+
   useEffect(() => {
-    if (provider) {
-      const fetchData = async () => {
-        const fusePoolDirectory: FusePoolDirectory = await FusePoolDirectory__factory.connect(
-          fusePoolDirectoryAddress,
-          provider.getSigner()
-        );
-        console.log(await fusePoolDirectory.getPublicPools());
-      };
-      fetchData();
-    }
+    const fetchData = async () => {
+      const fetchFuseData: FuseData[] = await getFuseData(provider);
+      setFuseData(fetchFuseData);
+      setLoading(false);
+    };
+    fetchData();
   }, [provider]);
+
   return (
-    <Box p={1}>
-      <p>Home</p>
+    <Box p={2}>
+      {!loading ? (
+        <Selection
+          fuseData={fuseData}
+          currentPool={currentPool}
+          setCurrentPool={setCurrentPool}
+        />
+      ) : (
+        <Center marginTop={10}>
+          <Spinner size="xl" />
+        </Center>
+      )}
     </Box>
   );
 }
