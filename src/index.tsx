@@ -13,8 +13,7 @@ const theme = extendTheme({
       },
     },
   },
-})
-
+});
 
 ReactDOM.render(
   <React.StrictMode>
