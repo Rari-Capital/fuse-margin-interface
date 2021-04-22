@@ -14,7 +14,19 @@ import { ethers } from "ethers";
 import NavLink from "./NavLink";
 import WalletButton from "./WalletButton";
 
-const Links = ["Home", "Docs", "Fuse"];
+const Links: {
+  link: string;
+  url: string;
+  external: boolean;
+}[] = [
+  { link: "Home", url: "/", external: false },
+  {
+    link: "Docs",
+    url: "https://github.com/gg2001/fuse-margin",
+    external: true,
+  },
+  { link: "Fuse", url: "https://app.rari.capital/fuse", external: true },
+];
 
 export default function NavBar({
   provider,
@@ -47,10 +59,12 @@ export default function NavBar({
             onClick={isOpen ? onClose : onOpen}
           />
           <HStack spacing={8} alignItems={"center"}>
-            <Link>
+            <Link href="/">
               <HStack spacing={4} alignItems={"center"}>
                 <Image borderRadius="full" src="fuseicon.png" alt="Fuse Logo" />
-                <Box><Text as="b">Fuse Margin Trading</Text></Box>
+                <Box>
+                  <Text as="b">Fuse Margin Trading</Text>
+                </Box>
               </HStack>
             </Link>
             <HStack
@@ -59,7 +73,7 @@ export default function NavBar({
               display={{ base: "none", md: "flex" }}
             >
               {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
+                <NavLink key={link.link} link={link.link} url={link.url} external={link.external} />
               ))}
             </HStack>
           </HStack>
@@ -75,7 +89,7 @@ export default function NavBar({
           <Box pb={4}>
             <Stack as={"nav"} spacing={4}>
               {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
+                <NavLink key={link.link} link={link.link} url={link.url} external={link.external} />
               ))}
             </Stack>
           </Box>

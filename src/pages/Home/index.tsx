@@ -26,19 +26,28 @@ function Home({
     <Box p={2}>
       <Center>
         <Heading as="h1" size="lg" margin={1} marginBottom={7}>
-          Open leveraged longs/shorts on any asset. Built on <Link><Text as="u">Fuse</Text></Link>.
+          Open leveraged longs/shorts on any asset. Built on{" "}
+          <Link href="https://app.rari.capital/fuse" isExternal>
+            <Text as="u">Fuse</Text>
+          </Link>
+          .
         </Heading>
       </Center>
       {!loading ? (
-          <Selection
-            fuseData={fuseData}
-            currentPool={currentPool}
-            setCurrentPool={setCurrentPool}
-          />
+        <Selection
+          fuseData={fuseData}
+          currentPool={currentPool}
+          setCurrentPool={setCurrentPool}
+        />
       ) : (
-        <Center marginTop={10}>
-          <Spinner size="xl" />
-        </Center>
+        <>
+          <Center marginTop={10}>
+            <Spinner size="xl" />
+          </Center>
+          <Center marginTop={10}>
+            <Box>Loading Fuse pools...</Box>
+          </Center>
+        </>
       )}
     </Box>
   );

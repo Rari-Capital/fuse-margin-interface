@@ -1,7 +1,14 @@
-import { ReactNode } from "react";
 import { Link, useColorModeValue } from "@chakra-ui/react";
 
-const NavLink = ({ children }: { children: ReactNode }): JSX.Element => (
+const NavLink = ({
+  url,
+  link,
+  external,
+}: {
+  url: string;
+  link: string;
+  external: boolean;
+}): JSX.Element => (
   <Link
     px={2}
     py={1}
@@ -11,9 +18,10 @@ const NavLink = ({ children }: { children: ReactNode }): JSX.Element => (
       textDecoration: "none",
       bg: useColorModeValue("gray.200", "gray.700"),
     }}
-    href={"#"}
+    href={url}
+    isExternal={external}
   >
-    {children}
+    {link}
   </Link>
 );
 
