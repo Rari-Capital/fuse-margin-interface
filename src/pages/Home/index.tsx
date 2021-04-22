@@ -25,7 +25,7 @@ function Home({
     }
   }, [provider]);
   return (
-    <Box>
+    <Box p={1}>
       <p>Home</p>
     </Box>
   );
