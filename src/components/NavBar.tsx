@@ -22,7 +22,7 @@ const Links: {
   { link: "Home", url: "/", external: false },
   {
     link: "Docs",
-    url: "https://github.com/gg2001/fuse-margin",
+    url: "https://github.com/Rari-Capital/fuse-margin",
     external: true,
   },
   { link: "Fuse", url: "https://app.rari.capital/fuse", external: true },
