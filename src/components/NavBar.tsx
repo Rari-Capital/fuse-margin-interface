@@ -11,7 +11,7 @@ import { ethers } from "ethers";
 import NavLink from "./NavLink";
 import WalletButton from "./WalletButton";
 
-const Links = ["Home", "GitHub", "Rari Capital"];
+const Links = ["Home", "Docs", "GitHub"];
 
 export default function NavBar({
   provider,
@@ -22,7 +22,15 @@ export default function NavBar({
   loadWeb3Modal: CallableFunction;
   logoutOfWeb3Modal: CallableFunction;
 }): JSX.Element {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen,
+    onOpen,
+    onClose,
+  }: {
+    isOpen: boolean;
+    onOpen: () => void;
+    onClose: () => void;
+  } = useDisclosure();
 
   return (
     <>
