@@ -7,13 +7,14 @@ import {
   Stack,
   Link,
   Image,
+  Text,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { ethers } from "ethers";
 import NavLink from "./NavLink";
 import WalletButton from "./WalletButton";
 
-const Links = ["Home", "Docs", "GitHub"];
+const Links = ["Home", "Docs", "Fuse"];
 
 export default function NavBar({
   provider,
@@ -49,7 +50,7 @@ export default function NavBar({
             <Link>
               <HStack spacing={4} alignItems={"center"}>
                 <Image borderRadius="full" src="fuseicon.png" alt="Fuse Logo" />
-                <Box>Fuse Margin Trading</Box>
+                <Box><Text as="b">Fuse Margin Trading</Text></Box>
               </HStack>
             </Link>
             <HStack

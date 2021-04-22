@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
-import { Box, Spinner, Center } from "@chakra-ui/react";
+import { Box, Spinner, Center, Heading, Link, Text } from "@chakra-ui/react";
 import getFuseData, { FuseData } from "../../utils/getFuseData";
 import Selection from "./Selection";
 
@@ -24,12 +24,17 @@ function Home({
 
   return (
     <Box p={2}>
+      <Center>
+        <Heading as="h1" size="lg" margin={1} marginBottom={7}>
+          Open leveraged longs/shorts on any asset. Built on <Link><Text as="u">Fuse</Text></Link>.
+        </Heading>
+      </Center>
       {!loading ? (
-        <Selection
-          fuseData={fuseData}
-          currentPool={currentPool}
-          setCurrentPool={setCurrentPool}
-        />
+          <Selection
+            fuseData={fuseData}
+            currentPool={currentPool}
+            setCurrentPool={setCurrentPool}
+          />
       ) : (
         <Center marginTop={10}>
           <Spinner size="xl" />
