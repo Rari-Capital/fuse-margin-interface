@@ -67,7 +67,7 @@ export default function NavBar({
           <HStack spacing={8} alignItems={"center"}>
             <Link href="/">
               <HStack spacing={4} alignItems={"center"}>
-                <Image borderRadius="full" src="fuseicon.png" alt="Fuse Logo" />
+                <Image borderRadius="full" src="fuselogo.png" alt="Fuse Logo" />
                 <Box>
                   <Text as="b">Fuse Margin Trading</Text>
                 </Box>
