@@ -52,7 +52,7 @@ function Home({
           <Box marginTop={2}>Pool assets:</Box>
           <UnorderedList>
             {fuseData[currentPool].tokens.map((token) => (
-              <ListItem>{token}</ListItem>
+              <ListItem key={token}>{token}</ListItem>
             ))}
           </UnorderedList>
         </>

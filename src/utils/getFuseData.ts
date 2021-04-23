@@ -6,7 +6,6 @@ import {
   FusePoolDirectory__factory,
   FusePoolDirectory,
   Comptroller__factory,
-  Comptroller,
 } from "../contracts/types";
 import getDefaultProvider from "./getDefaultProvider";
 
@@ -16,6 +15,31 @@ export interface FuseData {
   markets: string[];
   addresses: string[];
   tokens: string[];
+}
+
+async function getMarkets(
+  provider: ethers.providers.Provider,
+  fusePool: [string, string, string, ethers.BigNumber, ethers.BigNumber]
+): Promise<[string[], string[], string[]]> {
+  const poolMarkets: string[] = await Comptroller__factory.connect(
+    fusePool[2],
+    provider
+  ).getAllMarkets();
+  const getMarketsUnderlying: Promise<string>[] = poolMarkets.map(
+    (market: string) => CToken__factory.connect(market, provider).underlying()
+  );
+  const marketsUnderlying: string[] = await Promise.all(getMarketsUnderlying);
+  const getTokenSymbols: Promise<string>[] = marketsUnderlying.map((token) => {
+    if (token == ethers.constants.AddressZero) {
+      return new Promise((resolve) => resolve("ETH"));
+    } else if (token === mkrAddress) {
+      return new Promise((resolve) => resolve("MKR"));
+    } else {
+      return ERC20__factory.connect(token, provider).symbol();
+    }
+  });
+  const tokenSymbols: string[] = await Promise.all(getTokenSymbols);
+  return [poolMarkets, marketsUnderlying, tokenSymbols];
 }
 
 async function getFuseData(
@@ -29,61 +53,25 @@ async function getFuseData(
   );
   const publicPools: [
     ethers.BigNumber[],
-    ([string, string, string, ethers.BigNumber, ethers.BigNumber] & {
-      name: string;
-      creator: string;
-      comptroller: string;
-      blockPosted: ethers.BigNumber;
-      timestampPosted: ethers.BigNumber;
-    })[]
+    [string, string, string, ethers.BigNumber, ethers.BigNumber][]
   ] = await fusePoolDirectory.getPublicPools();
-  const getPoolMarkets: Promise<string[]>[] = [];
-  for (let i = 0; i < publicPools[1].length; i++) {
-    const fusePool: Comptroller = Comptroller__factory.connect(
-      publicPools[1][i][2],
-      provider
-    );
-    getPoolMarkets.push(fusePool.getAllMarkets());
+  const getPoolData: Promise<[string[], string[], string[]]>[] = [];
+  for (const fusePool of publicPools[1]) {
+    getPoolData.push(getMarkets(provider, fusePool));
   }
-  const poolMarkets: string[][] = await Promise.all(getPoolMarkets);
-  const poolTokens: string[][] = [];
-  for (const market of poolMarkets) {
-    const getPoolTokens: Promise<string>[] = [];
-    for (const token of market) {
-      getPoolTokens.push(CToken__factory.connect(token, provider).underlying());
-    }
-    poolTokens.push(await Promise.all(getPoolTokens));
-  }
-  const tokensList: string[][] = [];
-  for (const tokens of poolTokens) {
-    const getTokens: Promise<string>[] = [];
-    for (const token of tokens) {
-      if (token == ethers.constants.AddressZero) {
-        getTokens.push(new Promise((resolve) => resolve("ETH")));
-      } else if (token === mkrAddress) {
-        getTokens.push(new Promise((resolve) => resolve("MKR")));
-      } else {
-        getTokens.push(ERC20__factory.connect(token, provider).symbol());
-      }
-    }
-    tokensList.push(await Promise.all(getTokens));
-  }
+  const poolData: [string[], string[], string[]][] = await Promise.all(
+    getPoolData
+  );
   const fuseData: FuseData[] = publicPools[1].map(
     (
-      pool: [string, string, string, ethers.BigNumber, ethers.BigNumber] & {
-        name: string;
-        creator: string;
-        comptroller: string;
-        blockPosted: ethers.BigNumber;
-        timestampPosted: ethers.BigNumber;
-      },
+      pool: [string, string, string, ethers.BigNumber, ethers.BigNumber],
       index: number
     ): FuseData => ({
       name: pool[0],
       comptroller: pool[2],
-      markets: poolMarkets[index],
-      addresses: poolTokens[index],
-      tokens: tokensList[index],
+      markets: poolData[index][0],
+      addresses: poolData[index][1],
+      tokens: poolData[index][2],
     })
   );
   return fuseData;
