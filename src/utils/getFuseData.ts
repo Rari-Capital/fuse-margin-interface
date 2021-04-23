@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import { providers } from "@0xsequence/multicall";
 import { fusePoolDirectoryAddress, mkrAddress } from "../constants";
 import {
   ERC20__factory,
@@ -45,8 +46,9 @@ async function getMarkets(
 async function getFuseData(
   currentProvider: ethers.providers.Web3Provider | undefined
 ): Promise<FuseData[]> {
-  const provider: ethers.providers.Provider =
-    currentProvider || getDefaultProvider();
+  const provider: ethers.providers.Provider = new providers.MulticallProvider(
+    currentProvider || getDefaultProvider()
+  );
   const fusePoolDirectory: FusePoolDirectory = FusePoolDirectory__factory.connect(
     fusePoolDirectoryAddress,
     provider
