@@ -3,7 +3,7 @@ import Head from "next/head";
 import { Box, Center, Divider } from "@chakra-ui/react";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
-import { siteURL } from "../constants";
+import { siteURL, siteDescription, siteTitle } from "../constants";
 
 const siteTwitter: string = "@GauthamGE";
 const siteImageAlt: string = "Compound Logo";
@@ -34,6 +34,14 @@ function Layout({ children }: { children?: ReactNode }): JSX.Element {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="manifest" href="/manifest.json" />
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+        <title>{siteTitle}</title>
+        <meta name="description" content={siteDescription} />
+        <meta property="og:title" content={siteTitle} />
+        <meta property="og:url" content={siteURL} />
+        <meta property="og:description" content={siteDescription} />
+        <meta name="twitter:title" content={siteTitle} />
+        <meta name="twitter:url" content={siteURL} />
+        <meta name="twitter:description" content={siteDescription} />
         <meta name="msapplication-TileColor" content="#da532c" />
         <meta name="theme-color" content="#ffffff" />
         <meta property="og:type" content="website" />

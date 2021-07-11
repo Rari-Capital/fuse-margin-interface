@@ -2,6 +2,9 @@ import { ethers } from "ethers";
 
 export const GA_TRACKING_ID: string = process.env.GA_TRACKING_ID ?? "";
 export const siteURL: string = "https://fuse-margin.vercel.app/";
+export const siteTitle: string = "InstaLev - Margin Trade on Fuse";
+export const siteDescription: string =
+  "Margin trade on Fuse. Open leveraged longs/shorts on any asset";
 export const ALCHEMY_API: string = `https://eth-mainnet.alchemyapi.io/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`;
 export const INFURA_ID: string = process.env.NEXT_PUBLIC_INFURA_ID ?? "";
 export const saiSymbol: string =
