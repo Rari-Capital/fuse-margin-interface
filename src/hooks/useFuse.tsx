@@ -7,7 +7,7 @@ import {
   ReactNode,
 } from "react";
 import { ethers } from "ethers";
-// import useWeb3React from "./useWeb3React";
+import useWeb3React from "./useWeb3React";
 import {
   getDefaultProvider,
   getPools,
@@ -52,16 +52,12 @@ function reducer(state: State, action: Action): State {
   switch (action.type) {
     case ActionType.FETCHED_DEFAULT: {
       const { pools } = action.payload;
-      if (state.loaded) {
-        return { ...state };
-      } else {
-        return {
-          ...state,
-          loaded: true,
-          error: false,
-          pools,
-        };
-      }
+      return {
+        ...state,
+        loaded: true,
+        error: false,
+        pools,
+      };
     }
     case ActionType.SET_ERROR: {
       if (state.loaded) {
@@ -101,7 +97,7 @@ export function FuseProvider({
 }: {
   children: ReactNode;
 }): JSX.Element {
-  // const { chainId } = useWeb3React();
+  const { chainId } = useWeb3React();
   const [state, dispatch] = useReducer<(state: State, action: Action) => State>(
     reducer,
     initialState
@@ -132,7 +128,7 @@ export function FuseProvider({
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [chainId]);
 
   return <FuseContext.Provider value={state}>{children}</FuseContext.Provider>;
 }
