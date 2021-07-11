@@ -1,10 +1,5 @@
 import { ethers, BigNumber } from "ethers";
-import {
-  FusePoolDirectory__factory,
-  FusePoolLens__factory,
-  FusePoolDirectory,
-  FusePoolLens,
-} from "../types";
+import { FusePoolLens__factory, FusePoolLens } from "../types";
 import { addresses } from "../constants";
 
 export interface FusePoolAsset {
@@ -50,16 +45,13 @@ export async function getPools(
     comptroller: string;
   }[]
 > {
-  const fusePoolDirectory: FusePoolDirectory =
-    FusePoolDirectory__factory.connect(
-      addresses[chainId].fusePoolDirectory,
-      provider
-    );
-  const publicPools: [
-    ethers.BigNumber[],
-    [string, string, string, ethers.BigNumber, ethers.BigNumber][]
-  ] = await fusePoolDirectory.getPublicPools();
-  return publicPools[1].map((pool) => ({
+  const fusePoolLens: FusePoolLens = FusePoolLens__factory.connect(
+    addresses[chainId].fusePoolLens,
+    provider
+  );
+  const publicPoolsWithData =
+    await fusePoolLens.callStatic.getPublicPoolsWithData();
+  return publicPoolsWithData[1].map((pool) => ({
     name: pool[0],
     comptroller: pool[2],
   }));

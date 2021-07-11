@@ -13,7 +13,7 @@ function Trade(): JSX.Element {
   const router = useRouter();
 
   useEffect(() => {
-    router.push("/trade/0");
+    router.push("/trade/3");
   }, [router]);
 
   return (
