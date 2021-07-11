@@ -21,9 +21,7 @@ function AccordionPool({
   fusePool: FusePool;
   index: number;
 }): JSX.Element {
-  const tokensList: string = fusePool.assets
-    .map((asset) => asset.underlyingSymbol)
-    .join(" • ");
+  const tokensList: string = fusePool.underlyingSymbols.join(" • ");
   return (
     <AccordionItem>
       <h2>
