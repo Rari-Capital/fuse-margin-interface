@@ -1751,11 +1751,6 @@
         "internalType": "uint256",
         "name": "collateralFactorMantissa",
         "type": "uint256"
-      },
-      {
-        "internalType": "bool",
-        "name": "isComped",
-        "type": "bool"
       }
     ],
     "payable": false,

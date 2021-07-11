@@ -1,3 +1,5 @@
+import { ethers } from "ethers";
+
 export const GA_TRACKING_ID: string = process.env.GA_TRACKING_ID ?? "";
 export const siteURL: string = "https://fuse-margin.vercel.app/";
 export const ALCHEMY_API: string = `https://eth-mainnet.alchemyapi.io/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`;
@@ -11,28 +13,37 @@ export const tradeEthAddress: string =
 
 export const addresses: {
   [chainId: number]: {
-    comptroller: string;
     multicall: string;
-    cTokenSwap: string;
     wethAddress: string;
     daiAddress: string;
     uniswapV3FactoryAddress: string;
+    fusePoolDirectory: string;
+    fusePoolLens: string;
+    fuseMarginController: string;
+    fuseMarginV1: string;
+    connectorV1: string;
   };
 } = {
   1: {
-    comptroller: "0x3d9819210A31b4961b30EF54bE2aeD79B9c9Cd3B",
     multicall: "0xeefBa1e63905eF1D7ACbA5a8513c70307C1cE441",
-    cTokenSwap: "0x6B33DF549823f6e9dE7b86485BC1567A97F57f8d",
     wethAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
     daiAddress: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
     uniswapV3FactoryAddress: "0x1F98431c8aD98523631AE4a59f267346ea31F984",
+    fusePoolDirectory: "0x835482FE0532f169024d5E9410199369aAD5C77E",
+    fusePoolLens: "0x8dA38681826f4ABBe089643D2B3fE4C6e4730493",
+    fuseMarginController: ethers.constants.AddressZero,
+    fuseMarginV1: ethers.constants.AddressZero,
+    connectorV1: ethers.constants.AddressZero,
   },
   1337: {
-    comptroller: "0x3d9819210A31b4961b30EF54bE2aeD79B9c9Cd3B",
     multicall: "0xeefBa1e63905eF1D7ACbA5a8513c70307C1cE441",
-    cTokenSwap: "0x6B33DF549823f6e9dE7b86485BC1567A97F57f8d",
     wethAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
     daiAddress: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
     uniswapV3FactoryAddress: "0x1F98431c8aD98523631AE4a59f267346ea31F984",
+    fusePoolDirectory: "0x835482FE0532f169024d5E9410199369aAD5C77E",
+    fusePoolLens: "0x8dA38681826f4ABBe089643D2B3fE4C6e4730493",
+    fuseMarginController: ethers.constants.AddressZero,
+    fuseMarginV1: ethers.constants.AddressZero,
+    connectorV1: ethers.constants.AddressZero,
   },
 };

@@ -1,5 +1,5 @@
 import { ethers, BigNumber } from "ethers";
-import { calculateApy } from "./compound";
+import { calculateApy } from "./fuse";
 
 export function isLinkExternal(href: string | undefined): boolean {
   return href !== undefined ? href.startsWith("http") : false;

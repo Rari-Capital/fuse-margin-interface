@@ -1,7 +1,7 @@
 import type { AppProps } from "next/app";
 import { extendTheme, ChakraProvider } from "@chakra-ui/react";
 import { Web3ReactProvider } from "../hooks/useWeb3React";
-import { CompoundProvider } from "../hooks/useCompound";
+import { FuseProvider } from "../hooks/useFuse";
 
 const theme = extendTheme({
   styles: {
@@ -17,11 +17,11 @@ const theme = extendTheme({
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   return (
     <Web3ReactProvider>
-      <CompoundProvider>
+      <FuseProvider>
         <ChakraProvider theme={theme}>
           <Component {...pageProps} />
         </ChakraProvider>
-      </CompoundProvider>
+      </FuseProvider>
     </Web3ReactProvider>
   );
 }

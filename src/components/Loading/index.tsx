@@ -1,19 +1,19 @@
 import { ReactNode } from "react";
 import { Box, Text, Center, Spinner } from "@chakra-ui/react";
 import useWeb3React from "../../hooks/useWeb3React";
-import useCompound from "../../hooks/useCompound";
+import useFuse from "../../hooks/useFuse";
 import { addresses } from "../../constants";
 
 function Loading({ children }: { children?: ReactNode }): JSX.Element {
   const { provider, chainId } = useWeb3React();
-  const compoundState = useCompound();
+  const fuseState = useFuse();
 
   return (
     <Box>
       {chainId in addresses ? (
-        compoundState.loaded ? (
+        fuseState.loaded ? (
           children
-        ) : compoundState.error ? (
+        ) : fuseState.error ? (
           provider !== undefined ? (
             <Text>Failed to load data.</Text>
           ) : (
