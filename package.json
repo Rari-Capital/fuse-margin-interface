@@ -16,6 +16,7 @@
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
     "@walletconnect/web3-provider": "^1.4.1",
+    "axios": "^0.21.1",
     "ethers": "^5.0.2",
     "framer-motion": "^4",
     "next": "11.0.1",
