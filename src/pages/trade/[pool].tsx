@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { Box } from "@chakra-ui/react";
 import { siteURL } from "../../constants";
 import Layout from "../../components/layout";
@@ -10,6 +11,11 @@ const pageDescription: string =
 const pageURL: string = siteURL;
 
 function Trade(): JSX.Element {
+  const router = useRouter();
+  const pool: number = router.query.pool ? Number(router.query.pool) : 0;
+
+  console.log(pool);
+
   return (
     <Layout>
       <Head>

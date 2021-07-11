@@ -14,7 +14,7 @@ function Trade(): JSX.Element {
 
   useEffect(() => {
     router.push("/trade/0");
-  }, []);
+  }, [router]);
 
   return (
     <Layout>

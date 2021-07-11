@@ -16,7 +16,7 @@ function Footer(): JSX.Element {
         <Link href="https://rari.capital/" isExternal>
           <Text as="u">Rari Capital</Text>
         </Link>
-        's{" "}
+        &apos;s{" "}
         <Link href="https://app.rari.capital/fuse" isExternal>
           <Text as="u">Fuse</Text>
         </Link>
