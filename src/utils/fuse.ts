@@ -29,6 +29,10 @@ export interface FusePoolAsset {
 export interface FusePool {
   name: string;
   comptroller: string;
+  totalSupply: BigNumber;
+  totalBorrow: BigNumber;
+  underlyingTokens: string[];
+  underlyingSymbols: string[];
   assets: FusePoolAsset[];
 }
 
@@ -39,21 +43,20 @@ const daysPerYear = 365;
 export async function getPools(
   provider: ethers.providers.Provider,
   chainId: number
-): Promise<
-  {
-    name: string;
-    comptroller: string;
-  }[]
-> {
+): Promise<Omit<FusePool, "assets">[]> {
   const fusePoolLens: FusePoolLens = FusePoolLens__factory.connect(
     addresses[chainId].fusePoolLens,
     provider
   );
   const publicPoolsWithData =
     await fusePoolLens.callStatic.getPublicPoolsWithData();
-  return publicPoolsWithData[1].map((pool) => ({
+  return publicPoolsWithData[1].map((pool, index) => ({
     name: pool[0],
     comptroller: pool[2],
+    totalSupply: publicPoolsWithData[2][index],
+    totalBorrow: publicPoolsWithData[3][index],
+    underlyingTokens: publicPoolsWithData[4][index],
+    underlyingSymbols: publicPoolsWithData[5][index],
   }));
 }
 

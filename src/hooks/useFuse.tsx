@@ -78,10 +78,7 @@ async function getFuseState(
   provider: ethers.providers.Provider,
   chainId: number
 ): Promise<Omit<State, "loaded" | "error">> {
-  const pools: {
-    name: string;
-    comptroller: string;
-  }[] = await getPools(provider, chainId);
+  const pools: Omit<FusePool, "assets">[] = await getPools(provider, chainId);
   const poolAssets: FusePoolAsset[][] = await getPoolAssets(
     provider,
     chainId,
