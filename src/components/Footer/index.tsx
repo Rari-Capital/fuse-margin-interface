@@ -11,14 +11,23 @@ function Footer(): JSX.Element {
       justify={{ base: "center", md: "space-between" }}
       align={{ base: "center", md: "center" }}
     >
-      <Box></Box>
       <Box>
-        <Link href="https://github.com/gg2001/compound-swaps" isExternal>
+        Built on{" "}
+        <Link href="https://rari.capital/" isExternal>
+          <Text as="u">Rari Capital</Text>
+        </Link>
+        's{" "}
+        <Link href="https://app.rari.capital/fuse" isExternal>
+          <Text as="u">Fuse</Text>
+        </Link>
+      </Box>
+      <Box>
+        <Link href="https://github.com/Rari-Capital/fuse-margin" isExternal>
           <Text as="u">GitHub</Text>
         </Link>{" "}
         •{" "}
         <Link
-          href="https://etherscan.io/address/0x6B33DF549823f6e9dE7b86485BC1567A97F57f8d"
+          href="https://etherscan.io/address/0xdC3d8ba3CBDa63953DE5456ae0a1a13E5cC796E8"
           isExternal
         >
           <Text as="u">Etherscan</Text>

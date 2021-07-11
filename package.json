@@ -1,5 +1,5 @@
 {
-  "name": "@compound-swaps/interface",
+  "name": "fuse-margin-interface",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -13,7 +13,6 @@
   "dependencies": {
     "@chakra-ui/icons": "^1.0.13",
     "@chakra-ui/react": "^1.6.4",
-    "@compound-swaps/contracts": "*",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
     "@uniswap/v3-core": "^1.0.0",

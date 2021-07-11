@@ -11,7 +11,8 @@ function Header({
   return (
     <Heading
       as="h1"
-      color="green.600"
+      fontSize="2xl"
+      color="white"
       size="lg"
       margin={1}
       marginBottom={5}

@@ -5,7 +5,7 @@ import useCompound from "../../hooks/useCompound";
 import useBalances from "../../hooks/useBalances";
 import { addresses } from "../../constants";
 
-function Loading({ children }: { children: ReactNode }): JSX.Element {
+function Loading({ children }: { children?: ReactNode }): JSX.Element {
   const { provider, chainId } = useWeb3React();
   const compoundState = useCompound();
   const balancesState = useBalances();

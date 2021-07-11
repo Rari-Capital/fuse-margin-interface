@@ -31,7 +31,7 @@ function NavLink({
         px={linkParams.px}
         py={linkParams.py}
         border={isCurrent ? "1px" : undefined}
-        borderColor={isCurrent ? "green.500" : undefined}
+        borderColor={isCurrent ? "white.500" : undefined}
         rounded={linkParams.rounded}
         _hover={{
           color: "black",

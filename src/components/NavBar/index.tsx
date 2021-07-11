@@ -16,23 +16,23 @@ import NextLink from "next/link";
 import NavLink from "./NavLink";
 import WalletButton from "./WalletButton";
 
-const Links: {
+const links: {
   link: string;
   url: string;
   external: boolean;
   isRoute: boolean;
 }[] = [
-  { link: "Swap", url: "/", external: false, isRoute: true },
-  { link: "Swap & Repay", url: "/repay", external: false, isRoute: true },
+  { link: "Home", url: "/", external: false, isRoute: true },
+  { link: "Trade", url: "/trade", external: false, isRoute: true },
   {
     link: "Docs ↗",
-    url: "https://github.com/gg2001/compound-swaps",
+    url: "https://github.com/Rari-Capital/fuse-margin",
     external: true,
     isRoute: false,
   },
   {
-    link: "Compound ↗",
-    url: "https://app.compound.finance/",
+    link: "Fuse ↗",
+    url: "https://app.rari.capital/fuse",
     external: true,
     isRoute: false,
   },
@@ -85,14 +85,14 @@ function NavBar(): JSX.Element {
               <Link marginLeft={{ base: "1", md: "0" }}>
                 <HStack spacing={4} alignItems={"center"}>
                   <Image
-                    src="/logo.svg"
+                    src="/logo.png"
                     alt="Compound Logo"
                     width={48}
                     height={48}
                   />
                   <Box>
                     <Text as="b" fontSize={{ base: "14px", lg: "16px" }}>
-                      Compound Swaps
+                      InstaLev
                     </Text>
                   </Box>
                 </HStack>
@@ -103,7 +103,7 @@ function NavBar(): JSX.Element {
               spacing={4}
               display={{ base: "none", md: "flex" }}
             >
-              {Links.map((link) => (
+              {links.map((link) => (
                 <NavLink
                   key={link.link}
                   link={link.link}
@@ -122,7 +122,7 @@ function NavBar(): JSX.Element {
         {isOpen ? (
           <Box pb={4}>
             <Stack as={"nav"} spacing={4}>
-              {Links.map((link) => (
+              {links.map((link) => (
                 <NavLink
                   key={link.link}
                   link={link.link}
