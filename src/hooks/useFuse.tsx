@@ -24,17 +24,12 @@ export interface State {
 
 enum ActionType {
   FETCHED_DEFAULT,
-  FETCHED_PROVIDER,
   SET_ERROR,
 }
 
 type Action =
   | {
       type: ActionType.FETCHED_DEFAULT;
-      payload: Omit<State, "loaded" | "error">;
-    }
-  | {
-      type: ActionType.FETCHED_PROVIDER;
       payload: Omit<State, "loaded" | "error">;
     }
   | {
@@ -67,15 +62,6 @@ function reducer(state: State, action: Action): State {
           pools,
         };
       }
-    }
-    case ActionType.FETCHED_PROVIDER: {
-      const { pools } = action.payload;
-      return {
-        ...state,
-        loaded: true,
-        error: false,
-        pools,
-      };
     }
     case ActionType.SET_ERROR: {
       if (state.loaded) {
