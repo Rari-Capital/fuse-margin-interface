@@ -13,8 +13,8 @@ function Home(): JSX.Element {
       <Box p={2}>
         <Header>
           Margin trade on{" "}
-          <ExternalLink href={"https://app.rari.capital/fuse"} text={"Fuse"} />{" "}
-          . Open leveraged longs/shorts on any asset.
+          <ExternalLink href={"https://app.rari.capital/fuse"} text={"Fuse"} />.
+          Open leveraged longs/shorts on any asset.
         </Header>
         <Loading>
           <AccordionPools fusePools={pools} currentPools={[3, 6, 7, 8]} />

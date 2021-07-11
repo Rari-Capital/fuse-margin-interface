@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 
 export const GA_TRACKING_ID: string = process.env.GA_TRACKING_ID ?? "";
-export const siteURL: string = "https://fuse-margin.vercel.app/";
+export const siteURL: string = "https://instalev.finance/";
 export const siteTitle: string = "InstaLev - Margin Trade on Fuse";
 export const siteDescription: string =
   "Margin trade on Fuse. Open leveraged longs/shorts on any asset";
