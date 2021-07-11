@@ -1,9 +1,12 @@
+import { useCallback } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { Box } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import { siteURL } from "../../constants";
 import Layout from "../../components/layout";
 import Loading from "../../components/Loading";
+import { SelectPool } from "../../components/Trade";
+import useFuse from "../../hooks/useFuse";
 
 const pageTitle: string = "InstaLev - Margin Trade on Fuse";
 const pageDescription: string =
@@ -12,9 +15,13 @@ const pageURL: string = siteURL;
 
 function Trade(): JSX.Element {
   const router = useRouter();
+  const { pools } = useFuse();
   const pool: number = router.query.pool ? Number(router.query.pool) : 0;
 
-  console.log(pool);
+  const setPool: (value: number) => void = useCallback(
+    (value: number) => router.push(`/trade/${value}`),
+    [router]
+  );
 
   return (
     <Layout>
@@ -29,7 +36,13 @@ function Trade(): JSX.Element {
         <meta name="twitter:description" content={pageDescription} />
       </Head>
       <Box p={2}>
-        <Loading></Loading>
+        <Loading>
+          {pool < pools.length ? (
+            <SelectPool fusePools={pools} pool={pool} setPool={setPool} />
+          ) : (
+            <Text>Invalid pool.</Text>
+          )}
+        </Loading>
       </Box>
     </Layout>
   );
