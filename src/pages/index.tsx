@@ -4,6 +4,8 @@ import { siteURL } from "../constants";
 import { Header, ExternalLink } from "../components/Header";
 import Layout from "../components/layout";
 import Loading from "../components/Loading";
+import { AccordionPools } from "../components/Home";
+import useFuse from "../hooks/useFuse";
 
 const pageTitle: string = "InstaLev - Margin Trade on Fuse";
 const pageDescription: string =
@@ -11,6 +13,8 @@ const pageDescription: string =
 const pageURL: string = siteURL;
 
 function Home(): JSX.Element {
+  const { pools } = useFuse();
+
   return (
     <Layout>
       <Head>
@@ -29,7 +33,9 @@ function Home(): JSX.Element {
           <ExternalLink href={"https://app.rari.capital/fuse"} text={"Fuse"} />{" "}
           . Open leveraged longs/shorts on any asset.
         </Header>
-        <Loading></Loading>
+        <Loading>
+          <AccordionPools fusePools={pools} currentPools={[3, 6, 7, 8]} />
+        </Loading>
       </Box>
     </Layout>
   );
