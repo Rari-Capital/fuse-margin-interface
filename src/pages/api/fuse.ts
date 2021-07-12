@@ -41,7 +41,14 @@ async function handler(
     }
   } catch (error) {
     console.log(error.message);
-    pools = await getSerializedFusePools(chainIdQuery);
+  }
+
+  if (pools.length === 0) {
+    try {
+      pools = await getSerializedFusePools(chainIdQuery);
+    } catch (error) {
+      console.log(error.message);
+    }
   }
 
   res.status(200).json({ pools });
