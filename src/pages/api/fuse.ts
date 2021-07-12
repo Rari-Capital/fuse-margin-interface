@@ -35,7 +35,9 @@ async function handler(
     const redisPools = await redis.get(redisKey);
     if (redisPools === null) {
       pools = await getSerializedFusePools(chainIdQuery);
-      redis.set(redisKey, JSON.stringify(pools), "EX", 1800);
+      if (pools.length > 0) {
+        redis.set(redisKey, JSON.stringify(pools), "EX", 1800);
+      }
     } else {
       pools = JSON.parse(redisPools) as SerializedFusePool[];
     }
