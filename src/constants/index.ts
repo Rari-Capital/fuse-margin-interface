@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 
-export const GA_TRACKING_ID: string = process.env.NEXT_PUBLIC_GA_TRACKING_ID ?? "";
+export const GA_TRACKING_ID: string =
+  process.env.NEXT_PUBLIC_GA_TRACKING_ID ?? "";
 export const siteURL: string = "https://instalev.finance/";
 export const siteTitle: string = "InstaLev - Margin Trade on Fuse";
 export const siteDescription: string =

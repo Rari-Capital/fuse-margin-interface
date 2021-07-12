@@ -7,8 +7,15 @@ import {
   ReactNode,
 } from "react";
 import { ethers } from "ethers";
+import axios, { AxiosResponse } from "axios";
 import useWeb3React from "./useWeb3React";
-import { getDefaultProvider, FusePool, getFuseState } from "../utils";
+import {
+  getDefaultProvider,
+  FusePool,
+  getFuseState,
+  deserializeFuseState,
+  SerializedFusePool,
+} from "../utils";
 
 export interface State {
   loaded: boolean;
@@ -82,23 +89,40 @@ export function FuseProvider({
   useEffect(() => {
     let isMounted: boolean = true;
     const fetchData = async () => {
+      let pools: FusePool[] = [];
       try {
-        const defaultProvider: ethers.providers.Provider =
-          getDefaultProvider(chainId);
-        const fetchFuseState = await getFuseState(defaultProvider, chainId);
-        if (isMounted) {
-          dispatch({
-            type: ActionType.FETCHED_DEFAULT,
-            payload: fetchFuseState,
-          });
+        const res: AxiosResponse<any> = await axios(
+          `/api/fuse?chainId=${chainId}`
+        );
+        const fetchFuseState: { pools: SerializedFusePool[] } | undefined =
+          res.data;
+        if (fetchFuseState) {
+          pools = deserializeFuseState(fetchFuseState).pools;
         }
-      } catch (err) {
-        console.log(err);
-        if (isMounted) {
-          dispatch({
-            type: ActionType.SET_ERROR,
-          });
+      } catch (error) {
+        console.log(error.message);
+      }
+
+      if (pools.length === 0) {
+        try {
+          const defaultProvider: ethers.providers.Provider =
+            getDefaultProvider(chainId);
+          const fetchFuseState = await getFuseState(defaultProvider, chainId);
+          pools = fetchFuseState.pools;
+        } catch (error) {
+          console.log(error.message);
         }
+      }
+
+      if (isMounted && pools.length > 0) {
+        dispatch({
+          type: ActionType.FETCHED_DEFAULT,
+          payload: { pools },
+        });
+      } else if (isMounted) {
+        dispatch({
+          type: ActionType.SET_ERROR,
+        });
       }
     };
     fetchData();
