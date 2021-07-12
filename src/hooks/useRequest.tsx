@@ -13,11 +13,40 @@ export type Request = (
 
 function useRequest(throwError: boolean = true): {
   request: Request;
+  cancellableRequest: Request;
 } {
   const cancel = useRef<CancelTokenSource>();
   const cache = useRef<{ [url: string]: any }>({});
 
   const request: Request = useCallback(
+    async (url: string, config: AxiosRequestConfig = {}) => {
+      const configString: string = JSON.stringify(config);
+      const cacheKey: string = configString === "{}" ? url : url + configString;
+      try {
+        if (cache.current[cacheKey]) {
+          return cache.current[cacheKey];
+        }
+        /* eslint-disable  @typescript-eslint/no-explicit-any */
+        const res: AxiosResponse<any> = await axios(url, {
+          ...config,
+        });
+        /* eslint-disable  @typescript-eslint/no-explicit-any */
+        const result: any = res.data;
+        cache.current[cacheKey] = result;
+        return result;
+      } catch (error) {
+        if (throwError) {
+          throw new Error(error.message);
+        } else {
+          console.log("Request failed:", error.message);
+        }
+        return undefined;
+      }
+    },
+    [throwError]
+  );
+
+  const cancellableRequest: Request = useCallback(
     async (url: string, config: AxiosRequestConfig = {}) => {
       if (cancel.current) {
         cancel.current.cancel();
@@ -52,7 +81,7 @@ function useRequest(throwError: boolean = true): {
     [throwError]
   );
 
-  return { request };
+  return { request, cancellableRequest };
 }
 
 export default useRequest;

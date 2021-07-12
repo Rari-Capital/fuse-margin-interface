@@ -8,3 +8,11 @@ export function destructureNumberQuery(
     ? Number(query)
     : Number(query[0]);
 }
+
+export function getCoinGeckoAssetPlatform(chainId: number): string {
+  if (chainId === 1) {
+    return "ethereum";
+  } else {
+    return "ethereum";
+  }
+}
