@@ -20,8 +20,11 @@ function Trade(): JSX.Element {
   );
 
   useEffect(() => {
-    setToken(0);
-  }, [pool]);
+    if (pools[pool] && token >= pools[pool].assets.length) {
+      setToken(0);
+    }
+    /* eslint-disable react-hooks/exhaustive-deps */
+  }, [pool, pools]);
 
   return (
     <Layout>
