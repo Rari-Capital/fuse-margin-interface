@@ -2,15 +2,15 @@ import { Select } from "@chakra-ui/react";
 import { FusePool } from "../../utils";
 
 function SelectPool({
-  fusePools,
+  pools,
   pool,
   setPool,
 }: {
-  fusePools: FusePool[];
+  pools: FusePool[];
   pool: number;
   setPool: (value: number) => void;
 }): JSX.Element {
-  const listItems = fusePools.map((data, index) => (
+  const listItems = pools.map((data, index) => (
     <option key={data.comptroller} value={index}>
       {`${index} - ${data.name}`}
     </option>

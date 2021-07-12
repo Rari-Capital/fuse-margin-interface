@@ -1,9 +1,9 @@
 import { useCallback, useState } from "react";
 import { useRouter } from "next/router";
-import { Box, Text, Select, Center } from "@chakra-ui/react";
+import { Box, Text, Center } from "@chakra-ui/react";
 import Layout from "../../components/layout";
 import Loading from "../../components/Loading";
-import { SelectPool } from "../../components/Trade";
+import { SelectPool, SelectToken, PriceChart } from "../../components/Trade";
 import useFuse from "../../hooks/useFuse";
 
 function Trade(): JSX.Element {
@@ -14,20 +14,11 @@ function Trade(): JSX.Element {
 
   const setPool: (value: number) => void = useCallback(
     (value: number) => {
-      setToken(0);
       router.push(`/trade/${value}`);
+      setToken(0);
     },
     [router, setToken]
   );
-
-  const tokens = pools[pool]
-    ? pools[pool].assets.map((asset) => asset.underlyingSymbol)
-    : [];
-  const listItems = tokens.map((token, index) => (
-    <option key={token} value={index}>
-      {token}
-    </option>
-  ));
 
   return (
     <Layout>
@@ -35,19 +26,17 @@ function Trade(): JSX.Element {
         <Loading>
           {pool < pools.length ? (
             <>
-              <SelectPool fusePools={pools} pool={pool} setPool={setPool} />
-              <Center>
-                <Select
-                  value={token}
-                  margin={1}
-                  onChange={(event) => setToken(Number(event.target.value))}
-                  maxW={100}
-                  size="md"
-                  color="black"
-                  bg="white"
-                >
-                  {listItems}
-                </Select>
+              <SelectPool pools={pools} pool={pool} setPool={setPool} />
+              <Center margin={1}>
+                <SelectToken
+                  pools={pools}
+                  pool={pool}
+                  token={token}
+                  setToken={setToken}
+                />
+              </Center>
+              <Center margin={1}>
+                <PriceChart pools={pools} pool={pool} token={token} />
               </Center>
             </>
           ) : (
