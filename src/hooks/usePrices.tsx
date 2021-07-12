@@ -26,9 +26,17 @@ export interface CoinGecko {
   };
 }
 
+export interface CoinGeckoMarketChart {
+  prices: [number, number][];
+}
+
 export interface State {
   etherPrice: number;
   fetchCoinGecko: (address: string) => Promise<CoinGecko>;
+  fetchCoinGeckoMarketChart: (
+    address: string,
+    days?: string
+  ) => Promise<CoinGeckoMarketChart>;
 }
 
 const initialCoinGecko: CoinGecko = {
@@ -44,9 +52,15 @@ const initialCoinGecko: CoinGecko = {
   },
 };
 
+const initialCoinGeckoMarketChart: CoinGeckoMarketChart = {
+  prices: [],
+};
+
 const initialState: State = {
   etherPrice: 0,
   fetchCoinGecko: async (address: string) => initialCoinGecko,
+  fetchCoinGeckoMarketChart: async (address: string) =>
+    initialCoinGeckoMarketChart,
 };
 
 const PricesContext: Context<State> = createContext<State>(initialState);
@@ -78,7 +92,6 @@ export function PricesProvider({
         } else {
           console.log("Fetching prices failed");
         }
-        console.log(await fetchCoinGecko(ethers.constants.AddressZero));
       } catch (err) {
         console.log(err);
       }
@@ -97,8 +110,8 @@ export function PricesProvider({
           ? `https://api.coingecko.com/api/v3/coins/${assetPlatform}/contract/${address}`
           : `https://api.coingecko.com/api/v3/coins/ethereum`;
       const fetchedCoinGecko: CoinGecko | undefined = await request(url);
+      const coinGecko: CoinGecko = { ...initialCoinGecko };
       if (fetchedCoinGecko) {
-        const coinGecko: CoinGecko = { ...initialCoinGecko };
         if (fetchedCoinGecko.image) {
           if (fetchedCoinGecko.image.large) {
             coinGecko.image.large = fetchedCoinGecko.image.large;
@@ -118,16 +131,39 @@ export function PricesProvider({
           coinGecko.market_data.current_price.usd =
             fetchedCoinGecko.market_data.current_price.usd;
         }
-        return coinGecko;
-      } else {
-        return initialCoinGecko;
       }
+      return coinGecko;
+    },
+    [chainId, request]
+  );
+
+  const fetchCoinGeckoMarketChart: (
+    address: string,
+    days?: string
+  ) => Promise<CoinGeckoMarketChart> = useCallback(
+    async (address: string, days: string = "max") => {
+      const assetPlatform: string = getCoinGeckoAssetPlatform(chainId);
+      const url: string =
+        address !== ethers.constants.AddressZero
+          ? `https://api.coingecko.com/api/v3/coins/${assetPlatform}/contract/${address}/market_chart/?vs_currency=usd&days=${days}`
+          : `https://api.coingecko.com/api/v3/coins/ethereum/market_chart/?vs_currency=usd&days=${days}`;
+      const fetchedCoinGeckoMarketChart: CoinGeckoMarketChart | undefined =
+        await request(url);
+      const coinGeckoMarketChart: CoinGeckoMarketChart = {
+        ...initialCoinGeckoMarketChart,
+      };
+      if (fetchedCoinGeckoMarketChart && fetchedCoinGeckoMarketChart.prices) {
+        coinGeckoMarketChart.prices = fetchedCoinGeckoMarketChart.prices;
+      }
+      return coinGeckoMarketChart;
     },
     [chainId, request]
   );
 
   return (
-    <PricesContext.Provider value={{ etherPrice, fetchCoinGecko }}>
+    <PricesContext.Provider
+      value={{ etherPrice, fetchCoinGecko, fetchCoinGeckoMarketChart }}
+    >
       {children}
     </PricesContext.Provider>
   );
