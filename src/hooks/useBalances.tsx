@@ -1,6 +1,7 @@
 import { useReducer, useEffect } from "react";
 import { ethers, BigNumber } from "ethers";
 import useWeb3React from "./useWeb3React";
+import useFuse from "./useFuse";
 import { getBalances } from "../utils";
 
 export interface State {
@@ -55,8 +56,9 @@ function reducer(state: State, action: Action): State {
   }
 }
 
-function useBalances(tokens: string[]): State {
+function useBalances(pool: number): State {
   const { provider, chainId, address } = useWeb3React();
+  const { pools } = useFuse();
   const [state, dispatch] = useReducer<(state: State, action: Action) => State>(
     reducer,
     initialState
@@ -66,12 +68,16 @@ function useBalances(tokens: string[]): State {
     let isMounted: boolean = true;
     const fetchData = async () => {
       try {
-        if (provider && address !== ethers.constants.AddressZero) {
+        if (
+          provider &&
+          address !== ethers.constants.AddressZero &&
+          pools[pool]
+        ) {
           const balancesState = await getBalances(
             provider,
             chainId,
             address,
-            tokens
+            pools[pool].assets.map((asset) => asset.underlyingToken)
           );
           if (isMounted) {
             dispatch({
@@ -95,7 +101,7 @@ function useBalances(tokens: string[]): State {
       isMounted = false;
       if (provider !== undefined) provider.off("block", fetchData);
     };
-  }, [provider, chainId, address, JSON.stringify(tokens)]);
+  }, [provider, chainId, address, pool, pools]);
 
   return state;
 }

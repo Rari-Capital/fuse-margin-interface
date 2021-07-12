@@ -1,6 +1,7 @@
 import { useReducer, useEffect } from "react";
 import { ethers, BigNumber } from "ethers";
 import useWeb3React from "./useWeb3React";
+import useFuse from "./useFuse";
 import { getAllowances } from "../utils";
 
 export interface State {
@@ -55,8 +56,9 @@ function reducer(state: State, action: Action): State {
   }
 }
 
-function useAllowances(tokens: string[], contract: string): State {
+function useAllowances(pool: number, contract: string): State {
   const { provider, chainId, address } = useWeb3React();
+  const { pools } = useFuse();
   const [state, dispatch] = useReducer<(state: State, action: Action) => State>(
     reducer,
     initialState
@@ -66,12 +68,16 @@ function useAllowances(tokens: string[], contract: string): State {
     let isMounted: boolean = true;
     const fetchData = async () => {
       try {
-        if (provider && address !== ethers.constants.AddressZero) {
+        if (
+          provider &&
+          address !== ethers.constants.AddressZero &&
+          pools[pool]
+        ) {
           const allowancesState = await getAllowances(
             provider,
             chainId,
             address,
-            tokens,
+            pools[pool].assets.map((asset) => asset.underlyingToken),
             contract
           );
           if (isMounted) {
@@ -96,7 +102,7 @@ function useAllowances(tokens: string[], contract: string): State {
       isMounted = false;
       if (provider !== undefined) provider.off("block", fetchData);
     };
-  }, [provider, chainId, address, JSON.stringify(tokens)]);
+  }, [provider, chainId, address, pool, pools]);
 
   return state;
 }

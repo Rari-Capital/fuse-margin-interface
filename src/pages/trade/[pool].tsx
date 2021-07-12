@@ -12,12 +12,9 @@ function Trade(): JSX.Element {
   const router = useRouter();
   const { pools } = useFuse();
   const pool: number = router.query.pool ? Number(router.query.pool) : 0;
-  const tokens = pools[pool]
-    ? pools[pool].assets.map((asset) => asset.underlyingToken)
-    : [];
-  const { balances } = useBalances(tokens);
+  const { balances } = useBalances(pool);
   const { allowances } = useAllowances(
-    tokens,
+    pool,
     "0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9"
   );
 
