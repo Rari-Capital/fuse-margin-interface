@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Box, Text, Center } from "@chakra-ui/react";
 import Layout from "../../components/layout";
@@ -15,10 +15,13 @@ function Trade(): JSX.Element {
   const setPool: (value: number) => void = useCallback(
     (value: number) => {
       router.push(`/trade/${value}`);
-      setToken(0);
     },
-    [router, setToken]
+    [router]
   );
+
+  useEffect(() => {
+    setToken(0);
+  }, [pool]);
 
   return (
     <Layout>

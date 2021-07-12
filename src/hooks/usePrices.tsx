@@ -75,7 +75,8 @@ export function PricesProvider({
   children: ReactNode;
 }): JSX.Element {
   const { chainId } = useWeb3React();
-  const { request } = useRequest(false);
+  const { cancellableRequest: cancellableRequest0 } = useRequest(false);
+  const { cancellableRequest: cancellableRequest1 } = useRequest(false);
   const [etherPrice, setEtherPrice] = useState<number>(0);
 
   useEffect(() => {
@@ -109,7 +110,9 @@ export function PricesProvider({
         address !== ethers.constants.AddressZero
           ? `https://api.coingecko.com/api/v3/coins/${assetPlatform}/contract/${address}`
           : `https://api.coingecko.com/api/v3/coins/ethereum`;
-      const fetchedCoinGecko: CoinGecko | undefined = await request(url);
+      const fetchedCoinGecko: CoinGecko | undefined = await cancellableRequest0(
+        url
+      );
       const coinGecko: CoinGecko = { ...initialCoinGecko };
       if (fetchedCoinGecko) {
         if (fetchedCoinGecko.image) {
@@ -134,7 +137,7 @@ export function PricesProvider({
       }
       return coinGecko;
     },
-    [chainId, request]
+    [chainId, cancellableRequest0]
   );
 
   const fetchCoinGeckoMarketChart: (
@@ -148,7 +151,7 @@ export function PricesProvider({
           ? `https://api.coingecko.com/api/v3/coins/${assetPlatform}/contract/${address}/market_chart/?vs_currency=usd&days=${days}`
           : `https://api.coingecko.com/api/v3/coins/ethereum/market_chart/?vs_currency=usd&days=${days}`;
       const fetchedCoinGeckoMarketChart: CoinGeckoMarketChart | undefined =
-        await request(url);
+        await cancellableRequest1(url);
       const coinGeckoMarketChart: CoinGeckoMarketChart = {
         ...initialCoinGeckoMarketChart,
       };
@@ -157,7 +160,7 @@ export function PricesProvider({
       }
       return coinGeckoMarketChart;
     },
-    [chainId, request]
+    [chainId, cancellableRequest1]
   );
 
   return (
