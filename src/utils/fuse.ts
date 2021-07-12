@@ -36,6 +36,40 @@ export interface FusePool {
   assets: FusePoolAsset[];
 }
 
+export interface SerializedFusePoolAsset {
+  cToken: string;
+  underlyingToken: string;
+  underlyingName: string;
+  underlyingSymbol: string;
+  underlyingDecimals: string;
+  underlyingBalance: string;
+  supplyRatePerBlock: string;
+  borrowRatePerBlock: string;
+  totalSupply: string;
+  totalBorrow: string;
+  supplyBalance: string;
+  borrowBalance: string;
+  liquidity: string;
+  membership: boolean;
+  exchangeRate: string;
+  underlyingPrice: string;
+  oracle: string;
+  collateralFactor: string;
+  reserveFactor: string;
+  adminFee: string;
+  fuseFee: string;
+}
+
+export interface SerializedFusePool {
+  name: string;
+  comptroller: string;
+  totalSupply: string;
+  totalBorrow: string;
+  underlyingTokens: string[];
+  underlyingSymbols: string[];
+  assets: SerializedFusePoolAsset[];
+}
+
 const ethMantissa = 1e18;
 const blocksPerDay = 6570; // 13.15 seconds per block
 const daysPerYear = 365;
@@ -101,6 +135,97 @@ export async function getPoolAssets(
       fuseFee: asset[20],
     }))
   );
+}
+
+export async function getFuseState(
+  provider: ethers.providers.Provider,
+  chainId: number
+): Promise<{ pools: FusePool[] }> {
+  const pools: Omit<FusePool, "assets">[] = await getPools(provider, chainId);
+  const poolAssets: FusePoolAsset[][] = await getPoolAssets(
+    provider,
+    chainId,
+    pools
+  );
+  return {
+    pools: pools.map((pool, index) => ({ ...pool, assets: poolAssets[index] })),
+  };
+}
+
+export function deserializeFuseState(state: { pools: SerializedFusePool[] }): {
+  pools: FusePool[];
+} {
+  return {
+    pools: state.pools.map((pool) => ({
+      name: pool.name,
+      comptroller: pool.comptroller,
+      totalSupply: BigNumber.from(pool.totalSupply),
+      totalBorrow: BigNumber.from(pool.totalBorrow),
+      underlyingTokens: pool.underlyingTokens,
+      underlyingSymbols: pool.underlyingSymbols,
+      assets: pool.assets.map((asset) => ({
+        cToken: asset.cToken,
+        underlyingToken: asset.underlyingToken,
+        underlyingName: asset.underlyingName,
+        underlyingSymbol: asset.underlyingSymbol,
+        underlyingDecimals: BigNumber.from(asset.underlyingDecimals),
+        underlyingBalance: BigNumber.from(asset.underlyingBalance),
+        supplyRatePerBlock: BigNumber.from(asset.supplyRatePerBlock),
+        borrowRatePerBlock: BigNumber.from(asset.borrowRatePerBlock),
+        totalSupply: BigNumber.from(asset.totalSupply),
+        totalBorrow: BigNumber.from(asset.totalBorrow),
+        supplyBalance: BigNumber.from(asset.supplyBalance),
+        borrowBalance: BigNumber.from(asset.borrowBalance),
+        liquidity: BigNumber.from(asset.liquidity),
+        membership: asset.membership,
+        exchangeRate: BigNumber.from(asset.exchangeRate),
+        underlyingPrice: BigNumber.from(asset.underlyingPrice),
+        oracle: asset.oracle,
+        collateralFactor: BigNumber.from(asset.collateralFactor),
+        reserveFactor: BigNumber.from(asset.reserveFactor),
+        adminFee: BigNumber.from(asset.adminFee),
+        fuseFee: BigNumber.from(asset.fuseFee),
+      })),
+    })),
+  };
+}
+
+export function serializeFuseState(state: { pools: FusePool[] }): {
+  pools: SerializedFusePool[];
+} {
+  return {
+    pools: state.pools.map((pool) => ({
+      name: pool.name,
+      comptroller: pool.comptroller,
+      totalSupply: pool.totalSupply.toString(),
+      totalBorrow: pool.totalBorrow.toString(),
+      underlyingTokens: pool.underlyingTokens,
+      underlyingSymbols: pool.underlyingSymbols,
+      assets: pool.assets.map((asset) => ({
+        cToken: asset.cToken,
+        underlyingToken: asset.underlyingToken,
+        underlyingName: asset.underlyingName,
+        underlyingSymbol: asset.underlyingSymbol,
+        underlyingDecimals: asset.underlyingDecimals.toString(),
+        underlyingBalance: asset.underlyingBalance.toString(),
+        supplyRatePerBlock: asset.supplyRatePerBlock.toString(),
+        borrowRatePerBlock: asset.borrowRatePerBlock.toString(),
+        totalSupply: asset.totalSupply.toString(),
+        totalBorrow: asset.totalBorrow.toString(),
+        supplyBalance: asset.supplyBalance.toString(),
+        borrowBalance: asset.borrowBalance.toString(),
+        liquidity: asset.liquidity.toString(),
+        membership: asset.membership,
+        exchangeRate: asset.exchangeRate.toString(),
+        underlyingPrice: asset.underlyingPrice.toString(),
+        oracle: asset.oracle,
+        collateralFactor: asset.collateralFactor.toString(),
+        reserveFactor: asset.reserveFactor.toString(),
+        adminFee: asset.adminFee.toString(),
+        fuseFee: asset.fuseFee.toString(),
+      })),
+    })),
+  };
 }
 
 export function calculateApy(ratePerBlock: BigNumber): number {

@@ -8,13 +8,7 @@ import {
 } from "react";
 import { ethers } from "ethers";
 import useWeb3React from "./useWeb3React";
-import {
-  getDefaultProvider,
-  getPools,
-  getPoolAssets,
-  FusePool,
-  FusePoolAsset,
-} from "../utils";
+import { getDefaultProvider, FusePool, getFuseState } from "../utils";
 
 export interface State {
   loaded: boolean;
@@ -72,21 +66,6 @@ function reducer(state: State, action: Action): State {
     default:
       throw new Error();
   }
-}
-
-async function getFuseState(
-  provider: ethers.providers.Provider,
-  chainId: number
-): Promise<Omit<State, "loaded" | "error">> {
-  const pools: Omit<FusePool, "assets">[] = await getPools(provider, chainId);
-  const poolAssets: FusePoolAsset[][] = await getPoolAssets(
-    provider,
-    chainId,
-    pools
-  );
-  return {
-    pools: pools.map((pool, index) => ({ ...pool, assets: poolAssets[index] })),
-  };
 }
 
 export function FuseProvider({

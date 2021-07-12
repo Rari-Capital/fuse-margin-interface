@@ -1,16 +1,50 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { destructureNumberQuery } from "../../utils";
+import { ethers } from "ethers";
+import redis from "../../lib/redis";
+import { getDefaultProvider } from "../../lib/provider";
+import {
+  getFuseState,
+  SerializedFusePool,
+  destructureNumberQuery,
+  serializeFuseState,
+} from "../../utils";
 
-export default async (
+async function getSerializedFusePools(
+  chainId: number
+): Promise<SerializedFusePool[]> {
+  const defaultProvider: ethers.providers.Provider =
+    getDefaultProvider(chainId);
+  const fuseState = await getFuseState(defaultProvider, chainId);
+  return serializeFuseState(fuseState).pools;
+}
+
+async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<{}>
-): Promise<void> => {
+  res: NextApiResponse<{ pools: SerializedFusePool[] }>
+): Promise<void> {
   const {
     chainId,
   }: {
     [key: string]: string | string[] | undefined;
   } = req.query;
-  const chainIdQuery = destructureNumberQuery(chainId, 1);
+  const chainIdQuery: number = destructureNumberQuery(chainId, 1);
+  const redisKey: string = chainIdQuery.toString();
+  let pools: SerializedFusePool[] = [];
 
-  res.status(200).json({});
-};
+  try {
+    const redisPools = await redis.get(redisKey);
+    if (redisPools === null) {
+      pools = await getSerializedFusePools(chainIdQuery);
+      redis.set(redisKey, JSON.stringify(pools), "EX", 1800);
+    } else {
+      pools = JSON.parse(redisPools) as SerializedFusePool[];
+    }
+  } catch (error) {
+    console.log(error.message);
+    pools = await getSerializedFusePools(chainIdQuery);
+  }
+
+  res.status(200).json({ pools });
+}
+
+export default handler;
