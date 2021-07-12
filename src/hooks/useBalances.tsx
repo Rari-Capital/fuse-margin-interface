@@ -71,7 +71,8 @@ function useBalances(pool: number): State {
         if (
           provider &&
           address !== ethers.constants.AddressZero &&
-          pools[pool]
+          pools[pool] &&
+          pools[pool].assets.length > 0
         ) {
           const balancesState = await getBalances(
             provider,

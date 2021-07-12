@@ -71,7 +71,8 @@ function useAllowances(pool: number, contract: string): State {
         if (
           provider &&
           address !== ethers.constants.AddressZero &&
-          pools[pool]
+          pools[pool] &&
+          pools[pool].assets.length > 0
         ) {
           const allowancesState = await getAllowances(
             provider,
