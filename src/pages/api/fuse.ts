@@ -28,7 +28,7 @@ async function handler(
     [key: string]: string | string[] | undefined;
   } = req.query;
   const chainIdQuery: number = destructureNumberQuery(chainId, 1);
-  const redisKey: string = chainIdQuery.toString();
+  const redisKey: string = "instalev-" + chainIdQuery.toString();
   let pools: SerializedFusePool[] = [];
 
   try {
