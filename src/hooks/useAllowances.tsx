@@ -1,12 +1,12 @@
 import { useReducer, useEffect } from "react";
 import { ethers, BigNumber } from "ethers";
 import useWeb3React from "./useWeb3React";
-import { getBalances } from "../utils";
+import { getAllowances } from "../utils";
 
 export interface State {
   loaded: boolean;
   error: boolean;
-  balances: BigNumber[];
+  allowances: BigNumber[];
 }
 
 enum ActionType {
@@ -26,18 +26,18 @@ type Action =
 const initialState: State = {
   loaded: false,
   error: false,
-  balances: [],
+  allowances: [],
 };
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
     case ActionType.FETCHED_PROVIDER: {
-      const { balances } = action.payload;
+      const { allowances } = action.payload;
       return {
         ...state,
         loaded: true,
         error: false,
-        balances,
+        allowances,
       };
     }
     case ActionType.SET_ERROR: {
@@ -55,7 +55,7 @@ function reducer(state: State, action: Action): State {
   }
 }
 
-function useBalances(tokens: string[]): State {
+function useAllowances(tokens: string[], contract: string): State {
   const { provider, chainId, address } = useWeb3React();
   const [state, dispatch] = useReducer<(state: State, action: Action) => State>(
     reducer,
@@ -67,16 +67,17 @@ function useBalances(tokens: string[]): State {
     const fetchData = async () => {
       try {
         if (provider && address !== ethers.constants.AddressZero) {
-          const balancesState = await getBalances(
+          const allowancesState = await getAllowances(
             provider,
             chainId,
             address,
-            tokens
+            tokens,
+            contract
           );
           if (isMounted) {
             dispatch({
               type: ActionType.FETCHED_PROVIDER,
-              payload: { balances: balancesState.balanceOf },
+              payload: { allowances: allowancesState.allowance },
             });
           }
         }
@@ -100,4 +101,4 @@ function useBalances(tokens: string[]): State {
   return state;
 }
 
-export default useBalances;
+export default useAllowances;
