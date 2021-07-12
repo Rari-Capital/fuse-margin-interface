@@ -104,8 +104,9 @@ export function FuseProvider({
     let isMounted: boolean = true;
     const fetchData = async () => {
       try {
-        const defaultProvider: ethers.providers.Provider = getDefaultProvider();
-        const fetchFuseState = await getFuseState(defaultProvider, 1);
+        const defaultProvider: ethers.providers.Provider =
+          getDefaultProvider(chainId);
+        const fetchFuseState = await getFuseState(defaultProvider, chainId);
         if (isMounted) {
           dispatch({
             type: ActionType.FETCHED_DEFAULT,
