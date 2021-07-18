@@ -20,10 +20,13 @@ function Trade(): JSX.Element {
   );
 
   useEffect(() => {
-    if (pools[pool] && token >= pools[pool].assets.length) {
-      setToken(0);
-    }
-    /* eslint-disable react-hooks/exhaustive-deps */
+    setToken((prevState) => {
+      if (pools[pool] && prevState >= pools[pool].assets.length) {
+        return 0;
+      } else {
+        return prevState;
+      }
+    });
   }, [pool, pools]);
 
   return (
