@@ -104,6 +104,8 @@ export async function getPoolAssets(
     provider
   );
 
+    console.log("debug pool data:")
+
   const getPoolAssetsWithData = await Promise.all(
     pools.map((pool) =>
       fusePoolLens.callStatic.getPoolAssetsWithData(pool.comptroller)
