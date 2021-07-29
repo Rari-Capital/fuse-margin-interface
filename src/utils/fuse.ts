@@ -70,6 +70,30 @@ export interface SerializedFusePool {
   assets: SerializedFusePoolAsset[];
 }
 
+export type PoolAssetWithData = [
+  string,
+  string,
+  string,
+  string,
+  BigNumber,
+  BigNumber,
+  BigNumber,
+  BigNumber,
+  BigNumber,
+  BigNumber,
+  BigNumber,
+  BigNumber,
+  BigNumber,
+  boolean,
+  BigNumber,
+  BigNumber,
+  string,
+  BigNumber,
+  BigNumber,
+  BigNumber,
+  BigNumber
+];
+
 const ethMantissa = 1e18;
 const blocksPerDay = 6570; // 13.15 seconds per block
 const daysPerYear = 365;
@@ -94,22 +118,33 @@ export async function getPools(
   }));
 }
 
+export async function getPoolAssetsData(
+  provider: ethers.providers.Provider,
+  chainId: number,
+  pool: { comptroller: string }
+): Promise<PoolAssetWithData[]> {
+  const fusePoolLens: FusePoolLens = FusePoolLens__factory.connect(
+    addresses[chainId].fusePoolLens,
+    provider
+  );
+  let poolAssetsData: PoolAssetWithData[] = [];
+  try {
+    poolAssetsData = await fusePoolLens.callStatic.getPoolAssetsWithData(
+      pool.comptroller
+    );
+  } catch (err) {
+    console.log(err.message);
+  }
+  return poolAssetsData;
+}
+
 export async function getPoolAssets(
   provider: ethers.providers.Provider,
   chainId: number,
   pools: { comptroller: string }[]
 ): Promise<FusePoolAsset[][]> {
-  const fusePoolLens: FusePoolLens = FusePoolLens__factory.connect(
-    addresses[chainId].fusePoolLens,
-    provider
-  );
-
-    console.log("debug pool data:")
-
-  const getPoolAssetsWithData = await Promise.all(
-    pools.map((pool) =>
-      fusePoolLens.callStatic.getPoolAssetsWithData(pool.comptroller)
-    )
+  const getPoolAssetsWithData: PoolAssetWithData[][] = await Promise.all(
+    pools.map((pool) => getPoolAssetsData(provider, chainId, pool))
   );
 
   return getPoolAssetsWithData.map((pool) =>
